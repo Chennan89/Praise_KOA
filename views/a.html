@@ -1,0 +1,50 @@
+<div id="myDiv" style="width:100px;height:100px;background:yellow;"></div>
+<div id="a" style="width:100px;height:100px;background:blue;"></div>
+<script>
+    var colors=['red','green','blue','pink','purple','yellow','#ffe00']
+    var debounce= function(fn,delay,mustRunDelay){
+        var timer = null;
+        var t_start;
+        return function(){
+            var context = this;
+            var args = arguments;
+            var t_curr = +new Date();
+            clearTimeout(timer);
+            if(!t_start){
+                t_start = t_curr;
+            }
+            console.log(t_start,'-----------')
+            console.log(t_curr,'-----------')
+            console.log(t_curr - t_start,'-----------')
+            if(t_curr - t_start >= mustRunDelay) {console.log(222)
+                fn.apply(context,args);
+                t_start = t_curr
+            } else {console.log(11111)
+                timer = setTimeout(function(){
+                    fn.apply(context,args);
+                },delay);
+            }
+        } 
+    }
+
+function throttle(method,context){
+    clearTimeout(method.tId);
+    method.tId = setTimeout(function(){console.log(1)
+        method.call(context);
+    },200);
+}
+    function setCSS(){
+        var ran=Math.floor(Math.random()*7);
+        var color=colors[ran];console.log(color)
+
+        var div = document.getElementById('myDiv');
+        div.style.backgroundColor = color;
+    }
+
+    var func=debounce(setCSS,2000,1000);
+    a.onclick=function(){
+        //debounce(setCSS)();
+        func();
+        //throttle(setCSS,1000,3000);
+    }
+</script>
