@@ -50,36 +50,66 @@
 			this.addTpl(param);
 		}
 
-		//添加模板
-
-
 		_createClass(PraiseButton, [{
+			key: 'throttle',
+			value: function throttle(method) {
+				clearTimeout(method.tId);
+				method.tId = setTimeout(function () {
+					method();
+				}, 200);
+			}
+		}, {
 			key: 'addTpl',
 			value: function addTpl(ele) {
-				var _this = this;
+				var _this2 = this;
 
 				var element = $(ele);
 				element.append(this.tpl);
-				var throttle = _.throttle(async function () {
+				var timeI = null;
+				var throttle_click = function throttle_click() {
 					element.addClass("ani");
+					clearTimeout(timeI);
+					var _this = _this2;
 					var result = {};
-					try {
-						result = await axios({
-							method: 'get',
-							url: '/index/addNum',
-							responseType: 'json'
-						});
-					} catch (err) {
-						console.log(err);
-					}
-					var res = result.data;
-					if (res.code == 200) {
-						_this.updateNum(res.data);
-					} else {
-						console.log(res.data); //这个在服务端处理？？
-					}
-				}, 1000);
-				element.on('click', throttle);
+					timeI = setTimeout(async function () {
+						try {
+							result = await axios({
+								method: 'get',
+								url: '/index/addNum',
+								responseType: 'json'
+							});
+						} catch (err) {
+							console.log(err);
+						}
+						var res = result.data;
+						if (res.code == 200) {
+							_this.updateNum(res.data);
+						} else {
+							console.log(res.data);
+						}
+					}, 800);
+				};
+				element.on('click', throttle_click);
+				/*var throttle=_.throttle( async ()=>{
+    	element.addClass("ani");
+    	let result={};
+    	try{
+    		result=await axios({
+    			  method:'get',
+    			  url:'/index/addNum',
+    			  responseType:'json'
+    		})
+    	}catch(err){
+    		console.log(err);
+    	}
+    	let res=result.data;
+      	if(res.code==200){
+    		this.updateNum(res.data)
+      	}else{
+      		console.log(res.data);
+      	}
+    },2000);
+    element.on('click',throttle);*/
 				element.on("animationend webkitAnimationEnd oAnimationEnd", function () {
 					$(this).removeClass("ani");
 				});

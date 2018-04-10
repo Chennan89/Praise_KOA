@@ -15,11 +15,44 @@ class PraiseButton{
 		this.addTpl(param);
 	}
 
+	throttle(method){
+	    clearTimeout(method.tId);
+	    method.tId = setTimeout(function(){
+	        method();
+	    },200);
+	}
+
 	//添加模板
 	addTpl(ele){
 		const element=$(ele);
 		element.append(this.tpl);
-		var throttle=_.throttle( async ()=>{
+		var timeI=null;
+		var throttle_click= ()=>{
+			element.addClass("ani");
+			clearTimeout(timeI);
+			var _this=this;
+			let result={};
+			timeI=setTimeout(async function(){
+				try{
+					result=await axios({
+						  method:'get',
+						  url:'/index/addNum',
+						  responseType:'json'
+					})
+				}catch(err){
+					console.log(err);
+				}
+				let res=result.data;
+			  	if(res.code==200){
+					_this.updateNum(res.data)
+			  	}else{
+			  		console.log(res.data);
+			  	}
+
+			},800);
+		};
+		element.on('click',throttle_click);
+		/*var throttle=_.throttle( async ()=>{
 			element.addClass("ani");
 			let result={};
 			try{
@@ -37,8 +70,8 @@ class PraiseButton{
 		  	}else{
 		  		console.log(res.data);
 		  	}
-		},1000);
-		element.on('click',throttle);
+		},2000);
+		element.on('click',throttle);*/
 		element.on("animationend webkitAnimationEnd oAnimationEnd", function () {
 			$(this).removeClass("ani");
 		});
