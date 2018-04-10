@@ -16,14 +16,28 @@ router.get('/addNum/', async (ctx,next)=>{
 	//console.log(ctx.url);
 	//ctx.body='hhh'
 	//请求PHP数据
-	await axios.get('http://localhost:8001/Praise_KOA/dataInterface/data.php')
-	  .then(function (r) {
+	
+
+	await axios({
+	  method:'get',
+	  url:'http://localhost:8001/Praise_KOA/dataInterface/data.php',
+	  //responseType:'json',
+	  //withCredentials:true
+	}).then(function (r) {
 	    console.log(r.data);//r.data才是返回的数据
 	    ctx.body={code:200,data:r.data};
 	  })
 	  .catch(function (error) {
 	    console.log(error);
 	  });
+	/*await axios.get('http://localhost:8001/Praise_KOA/dataInterface/data.php')
+	  .then(function (r) {
+	    console.log(r.data);//r.data才是返回的数据
+	    ctx.body={code:200,data:r.data};
+	  })
+	  .catch(function (error) {
+	    console.log(error);
+	  });*/
 });
 
 module.exports=router;
