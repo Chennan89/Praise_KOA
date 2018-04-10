@@ -56,49 +56,30 @@
 		_createClass(PraiseButton, [{
 			key: 'addTpl',
 			value: function addTpl(ele) {
-				var _this2 = this;
+				var _this = this;
 
 				var element = $(ele);
 				element.append(this.tpl);
-				element.on('click', function (e) {
+				var throttle = _.throttle(async function () {
 					element.addClass("ani");
-					var _this = _this2;
-					/*$.ajax({
-     	method:'get',
-     	  url:'/index/addNum',
-     	  responseType:'json',
-     	  success:function(data){
-     	  	if(data.code==200){
-     	  		//_this.updateNum(++this.number)
-     	  		_this.updateNum(data.data)
-     	  	}else{
-     	  		console.log('出错了');//这个在服务端处理？？
-     	  	}
-     	  },
-     	  error:function(err){
-     	  	console.log(err)
-     	  	console.log('出错了!!!!!!!!!!!!!');
-     	  }
-     });
-     */axios({
-						method: 'get',
-						url: '/index/addNum',
-						responseType: 'json'
-					}).then(function (response) {
-						console.log(response);
-						var res = response.data;
-						if (res.code == 200) {
-							//_this.updateNum(++this.number)
-							_this.updateNum(res.data);
-						} else {
-							console.log('出错了'); //这个在服务端处理？？
-						}
-					}).catch(function (error) {
-						console.log(error);
-						console.log('出错了!!!!!!!!!!!!!');
-					});
-				});
-
+					var result = {};
+					try {
+						result = await axios({
+							method: 'get',
+							url: '/index/addNum',
+							responseType: 'json'
+						});
+					} catch (err) {
+						console.log(err);
+					}
+					var res = result.data;
+					if (res.code == 200) {
+						_this.updateNum(res.data);
+					} else {
+						console.log(res.data); //这个在服务端处理？？
+					}
+				}, 1000);
+				element.on('click', throttle);
 				element.on("animationend webkitAnimationEnd oAnimationEnd", function () {
 					$(this).removeClass("ani");
 				});
