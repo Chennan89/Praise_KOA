@@ -1,4 +1,4 @@
-//import {axios} from 'axios';//引入路径不对。。
+import axios from '../axio.js';//引入路径不对。。
 class PraiseButton{
 	constructor(param){
 		this.number=0;

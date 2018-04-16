@@ -1,21 +1,29 @@
 (function (global, factory) {
 	if (typeof define === "function" && define.amd) {
-		define(['exports'], factory);
+		define(['exports', '../axio.js'], factory);
 	} else if (typeof exports !== "undefined") {
-		factory(exports);
+		factory(exports, require('../axio.js'));
 	} else {
 		var mod = {
 			exports: {}
 		};
-		factory(mod.exports);
+		factory(mod.exports, global.axio);
 		global.PraiseButton = mod.exports;
 	}
-})(this, function (exports) {
+})(this, function (exports, _axio) {
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
 		value: true
 	});
+
+	var _axio2 = _interopRequireDefault(_axio);
+
+	function _interopRequireDefault(obj) {
+		return obj && obj.__esModule ? obj : {
+			default: obj
+		};
+	}
 
 	function _classCallCheck(instance, Constructor) {
 		if (!(instance instanceof Constructor)) {
@@ -73,7 +81,7 @@
 					var result = {};
 					timeI = setTimeout(async function () {
 						try {
-							result = await axios({
+							result = await (0, _axio2.default)({
 								method: 'get',
 								url: '/index/addNum',
 								responseType: 'json'

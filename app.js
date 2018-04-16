@@ -16,5 +16,4 @@ app.use(views(__dirname + '/views', {
 const indexRouter=require('./routers/indexRouter');
 
 app.use(indexRouter.routes(),indexRouter.allowedMethods({}));
-
 app.listen(3000);
